@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:press_it/bloc/press_bloc.dart';
+import 'package:press_it/views/admin_screen.dart';
 import 'package:press_it/views/group_form.dart';
 import 'package:press_it/views/press_screen.dart';
 
@@ -9,5 +10,7 @@ List<Page> onGenerateAppPages(PressState state, List<Page> pages) {
       return [GroupForm.page()];
     case PressStep.game:
       return [PressScreen.page()];
+    case PressStep.admin:
+      return [AdminScreen.page()];
   }
 }

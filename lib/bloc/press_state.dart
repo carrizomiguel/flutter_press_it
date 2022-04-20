@@ -3,6 +3,7 @@ part of 'press_bloc.dart';
 enum PressStep {
   naming,
   game,
+  admin,
 }
 
 enum GameStatus {

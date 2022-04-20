@@ -1,32 +1,69 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:press_it/models/group.dart';
+import 'package:press_it/services/utils.dart';
 
 class FirebaseService {
-  static Future<void> pressGroupName(String name) async {
-    String groupId = 'lHWo73hrptfkvqiDtX71';
-    final doc = await FirebaseFirestore.instance
+  static Stream<Group> getWinnerGroup() {
+    String gameId = 'lHWo73hrptfkvqiDtX71';
+    return FirebaseFirestore.instance
         .collection('dynamic-press-it')
-        .doc(groupId)
+        .doc(gameId)
+        .snapshots()
+        .map((event) {
+      return Group.fromJson(event.data()!);
+    });
+  }
+
+  static Future<void> addGroupToRank(String name, int timestamp) async {
+    String gameId = 'lHWo73hrptfkvqiDtX71';
+    String groupId = Utils.getRandomString(10);
+    final rank = await FirebaseFirestore.instance
+        .collection('dynamic-press-it')
+        .doc(gameId)
+        .collection('rank')
         .get();
-    final position = doc.get('position');
-    if (position == 0) {
+    List<Rank> groups = [];
+    for (var doc in rank.docs) {
+      groups.add(Rank.fromJson(doc.data()));
+    }
+    groups.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    await FirebaseFirestore.instance
+        .collection('dynamic-press-it')
+        .doc(gameId)
+        .set({
+      "groupWinner": groups.first.groupName,
+    });
+    final exists = groups.where((e) => e.groupName == name);
+    if (exists.isEmpty) {
       FirebaseFirestore.instance
           .collection('dynamic-press-it')
-          .doc(groupId)
-          .set({
-        'group-winner': name,
-        'position': 1,
+          .doc(gameId)
+          .collection('rank')
+          .add({
+        "groupId": groupId,
+        "groupName": name,
+        "timestamp": timestamp,
       });
     }
   }
 
-  static Stream<Group> getWinnerGroup() {
-    return FirebaseFirestore.instance
+  static Future<void> resetAllDocuments() async {
+    String gameId = 'lHWo73hrptfkvqiDtX71';
+    await FirebaseFirestore.instance
         .collection('dynamic-press-it')
-        .snapshots()
-        .map((snapshot) {
-      final doc = snapshot.docs.first;
-      return Group.fromJson(doc.data());
+        .doc(gameId)
+        .set({
+      'groupWinner': '',
+    });
+    await FirebaseFirestore.instance
+        .collection('dynamic-press-it')
+        .doc(gameId)
+        .collection('rank')
+        .get()
+        .then((value) {
+      for (var doc in value.docs) {
+        doc.reference.delete();
+      }
     });
   }
 }

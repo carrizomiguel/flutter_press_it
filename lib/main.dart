@@ -6,7 +6,15 @@ import 'package:press_it/bloc/press_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    name: 'Press It',
+    options: const FirebaseOptions(
+      apiKey: "AIzaSyAFWwlibJUZ2RoPXRZPcnCWUe261SGP98Y",
+      projectId: "press-it-6d3fd",
+      messagingSenderId: "752324812853",
+      appId: "1:752324812853:web:beb928afcf7a774ea1d17c"
+    ),
+  );
   runApp(const MyApp());
 }
 

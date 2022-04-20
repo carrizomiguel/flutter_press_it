@@ -15,40 +15,39 @@ class PressScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
+    return StreamBuilder<Group>(
+      stream: FirebaseService.getWinnerGroup(),
+      builder: (context, snapshot) {
         final pressBloc = context.read<PressBloc>();
-        pressBloc.add(ScreenPressed());
-      },
-      child: StreamBuilder<Group>(
-        stream: FirebaseService.getWinnerGroup(),
-        builder: (context, snapshot) {
-          final pressBloc = context.read<PressBloc>();
-          final groupName = pressBloc.state.groupName;
+        final groupName = pressBloc.state.groupName;
 
-          return Scaffold(
-            backgroundColor: groupName == snapshot.data?.groupWinner
-                ? Colors.green
-                : Colors.red.shade800,
-            body: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child: Center(
-                child: Transform.rotate(
-                  angle: -1.6,
-                  child: const Text(
-                    'Presiona',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 25,
-                    ),
+        return ElevatedButton(
+          onPressed: () {
+            pressBloc.add(ScreenPressed());
+          },
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: const Center(
+              child: RotatedBox(
+                quarterTurns: 1,
+                child: Text(
+                  'Presiona',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 25,
                   ),
                 ),
               ),
             ),
-          );
-        },
-      ),
+          ),
+          style: ElevatedButton.styleFrom(
+            primary: groupName == snapshot.data?.groupWinner
+                ? Colors.green
+                : Colors.red.shade800,
+          ),
+        );
+      },
     );
   }
 }
