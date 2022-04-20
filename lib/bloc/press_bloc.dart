@@ -11,6 +11,7 @@ class PressBloc extends Bloc<PressEvent, PressState> {
     on<ScreenPressed>(_onScreenPressed);
     on<ResetGame>(_onResetGame);
     on<RankUpdated>(_onRankUpdated);
+    on<ButtonStatusChanged>(_onButtonStatusChanged);
   }
 
   void _onNameSaved(
@@ -59,5 +60,14 @@ class PressBloc extends Bloc<PressEvent, PressState> {
       'update',
       yearsAdded.millisecondsSinceEpoch,
     );
+  }
+
+  void _onButtonStatusChanged(
+    ButtonStatusChanged event,
+    Emitter emit,
+  ) {
+    emit(state.copyWith(
+      pressed: event.pressed,
+    ));
   }
 }

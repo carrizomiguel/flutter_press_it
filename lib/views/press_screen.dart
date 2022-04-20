@@ -15,39 +15,61 @@ class PressScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<Group>(
-      stream: FirebaseService.getWinnerGroup(),
-      builder: (context, snapshot) {
-        final pressBloc = context.read<PressBloc>();
-        final groupName = pressBloc.state.groupName;
+    return Material(
+      color: Colors.white,
+      child: StreamBuilder<Group>(
+        stream: FirebaseService.getWinnerGroup(),
+        builder: (context, snapshot) {
+          final pressBloc = context.watch<PressBloc>();
+          final groupName = pressBloc.state.groupName;
 
-        return ElevatedButton(
-          onPressed: () {
-            pressBloc.add(ScreenPressed());
-          },
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            child: const Center(
-              child: RotatedBox(
-                quarterTurns: 1,
-                child: Text(
-                  'Presiona',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 25,
+          if (snapshot.data?.groupWinner == "") {
+            pressBloc.add(const ButtonStatusChanged(
+              pressed: false,
+            ));
+          } else if (snapshot.data?.groupWinner == groupName) {
+            pressBloc.add(const ButtonStatusChanged(
+              pressed: false,
+            ));
+          } else if (snapshot.data?.groupWinner != groupName) {
+            pressBloc.add(const ButtonStatusChanged(
+              pressed: true,
+            ));
+          }
+
+          return ElevatedButton(
+            onPressed: pressBloc.state.pressed
+                ? null
+                : () {
+                    pressBloc.add(ScreenPressed());
+                    pressBloc.add(const ButtonStatusChanged(
+                      pressed: true,
+                    ));
+                  },
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              child: const Center(
+                child: RotatedBox(
+                  quarterTurns: 1,
+                  child: Text(
+                    'Presiona',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 25,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          style: ElevatedButton.styleFrom(
-            primary: groupName == snapshot.data?.groupWinner
-                ? Colors.green
-                : Colors.red.shade800,
-          ),
-        );
-      },
+            style: ElevatedButton.styleFrom(
+              primary: groupName == snapshot.data?.groupWinner
+                  ? Colors.green
+                  : Colors.red.shade800,
+            ),
+          );
+        },
+      ),
     );
   }
 }

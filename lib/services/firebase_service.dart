@@ -29,7 +29,7 @@ class FirebaseService {
     groups.sort((a, b) => a.timestamp.compareTo(b.timestamp));
     final exists = groups.where((e) => e.groupName == name);
     if (exists.isEmpty) {
-      FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           .collection('dynamic-press-it')
           .doc(gameId)
           .collection('rank')

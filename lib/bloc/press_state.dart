@@ -17,21 +17,25 @@ class PressState extends Equatable {
     this.step = PressStep.naming,
     this.gameStatus = GameStatus.notPressed,
     this.groupName = "",
+    this.pressed = false,
   });
 
   final PressStep step;
   final GameStatus gameStatus;
   final String groupName;
+  final bool pressed;
 
   PressState copyWith({
     PressStep? step,
     GameStatus? gameStatus,
     String? groupName,
+    bool? pressed,
   }) {
     return PressState(
       step: step ?? this.step,
       gameStatus: gameStatus ?? this.gameStatus,
       groupName: groupName ?? this.groupName,
+      pressed: pressed ?? this.pressed,
     );
   }
 
@@ -40,5 +44,6 @@ class PressState extends Equatable {
         step,
         gameStatus,
         groupName,
+        pressed,
       ];
 }
