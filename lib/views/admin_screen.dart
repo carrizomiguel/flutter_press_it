@@ -18,18 +18,58 @@ class AdminScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedButton(
-              onPressed: () {
-                final pressBloc = context.read<PressBloc>();
-                pressBloc.add(ResetGame());
-              },
-              child: const Text('Reset'),
+            const Text(
+              'Actions',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 40,
+                color: Colors.black,
+              ),
             ),
-            // const SizedBox(height: 15),
-            // ElevatedButton(
-            //   onPressed: () {},
-            //   child: const Text('Prepare'),
-            // ),
+            const SizedBox(height: 50),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 50,
+              ),
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    final pressBloc = context.read<PressBloc>();
+                    pressBloc.add(ResetGame());
+                  },
+                  child: const Text('Reset'),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 35),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 50,
+              ),
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    final pressBloc = context.read<PressBloc>();
+                    pressBloc.add(RankUpdated());
+                  },
+                  child: const Text('Update'),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

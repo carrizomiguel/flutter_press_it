@@ -10,6 +10,7 @@ class PressBloc extends Bloc<PressEvent, PressState> {
     on<NameSaved>(_onNameSaved);
     on<ScreenPressed>(_onScreenPressed);
     on<ResetGame>(_onResetGame);
+    on<RankUpdated>(_onRankUpdated);
   }
 
   void _onNameSaved(
@@ -46,5 +47,17 @@ class PressBloc extends Bloc<PressEvent, PressState> {
     Emitter emit,
   ) async {
     await FirebaseService.resetAllDocuments();
+  }
+
+  void _onRankUpdated(
+    RankUpdated event,
+    Emitter emit,
+  ) async {
+    final today = DateTime.now();
+    final yearsAdded = today.add(const Duration(days: 365));
+    await FirebaseService.addGroupToRank(
+      'update',
+      yearsAdded.millisecondsSinceEpoch,
+    );
   }
 }

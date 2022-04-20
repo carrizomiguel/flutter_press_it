@@ -26,13 +26,7 @@ class FirebaseService {
     for (var doc in rank.docs) {
       groups.add(Rank.fromJson(doc.data()));
     }
-    groups.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-    await FirebaseFirestore.instance
-        .collection('dynamic-press-it')
-        .doc(gameId)
-        .set({
-      "groupWinner": groups.first.groupName,
-    });
+    groups.sort((a, b) => a.timestamp.compareTo(b.timestamp));
     final exists = groups.where((e) => e.groupName == name);
     if (exists.isEmpty) {
       FirebaseFirestore.instance
@@ -43,6 +37,14 @@ class FirebaseService {
         "groupId": groupId,
         "groupName": name,
         "timestamp": timestamp,
+      });
+    }
+    if (groups.isNotEmpty) {
+      await FirebaseFirestore.instance
+          .collection('dynamic-press-it')
+          .doc(gameId)
+          .set({
+        "groupWinner": groups.first.groupName,
       });
     }
   }

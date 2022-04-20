@@ -16,3 +16,5 @@ class NameSaved extends PressEvent {
 class ScreenPressed extends PressEvent {}
 
 class ResetGame extends PressEvent {}
+
+class RankUpdated extends PressEvent {}
